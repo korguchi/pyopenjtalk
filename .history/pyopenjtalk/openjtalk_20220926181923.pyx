@@ -161,7 +161,7 @@ cdef class OpenJTalk(object):
     cdef NJD* njd
     cdef JPCommon* jpcommon
 
-    def __cinit__(self, bytes dn_mecab=b"/usr/local/dic", bytes user_mecab=b""):
+    def __cinit__(self, bytes dn_mecab=b"/usr/local/dic"):
         self.mecab = new Mecab()
         self.njd = new NJD()
         self.jpcommon = new JPCommon()
@@ -170,7 +170,7 @@ cdef class OpenJTalk(object):
         NJD_initialize(self.njd)
         JPCommon_initialize(self.jpcommon)
 
-        r = self._load(dn_mecab, user_mecab)
+        r = self._load(dn_mecab)
         if r != 1:
           self._clear()
           raise RuntimeError("Failed to initalize Mecab")
@@ -181,8 +181,8 @@ cdef class OpenJTalk(object):
       NJD_clear(self.njd)
       JPCommon_clear(self.jpcommon)
 
-    def _load(self, bytes dn_mecab, bytes user_mecab):
-        return Mecab_load_ex(self.mecab, dn_mecab, user_mecab)
+    def _load(self, bytes dn_mecab):
+        return Mecab_load(self.mecab, dn_mecab)
 
 
     def run_frontend(self, text):
@@ -265,18 +265,3 @@ cdef class OpenJTalk(object):
         del self.mecab
         del self.njd
         del self.jpcommon
-
-    def CreateUserDict(bytes dn_mecab, bytes path, bytes out_path):
-        cdef (char*)[10] argv = [
-            "mecab-dict-index",
-            "-d",
-            dn_mecab,
-            "-u",
-            out_path,
-            "-f",
-            "utf-8",
-            "-t",
-            "utf-8",
-            path
-        ]
-        mecab_dict_index(10, argv)

@@ -18,7 +18,7 @@ except ImportError:
     raise ImportError("BUG: version.py doesn't exist. Please file a bug report.")
 
 from .htsengine import HTSEngine
-from .openjtalk import CreateUserDict, OpenJTalk
+from .openjtalk import OpenJTalk
 from .utils import merge_njd_marine_features
 
 # Dictionary directory
@@ -224,31 +224,3 @@ def make_label(njd_features):
         _lazy_init()
         _global_jtalk = OpenJTalk(dn_mecab=OPEN_JTALK_DICT_DIR)
     return _global_jtalk.make_label(njd_features)
-
-def create_user_dict(path, out_path):
-    """Create user dictionary
-    Args:
-        path (str): path to user csv
-        out_path (str): path to output dictionary
-    """
-    global _global_jtalk
-    if _global_jtalk is None:
-        _lazy_init()
-    if not exists(path):
-        raise ValueError("no such file or directory: %s" % path)
-    CreateUserDict(OPEN_JTALK_DICT_DIR, path.encode("utf-8"), out_path.encode("utf-8"))
-
-
-def set_user_dict(path):
-    """Apply user dictionary
-    Args:
-        path (str): path to user dictionary
-    """
-    global _global_jtalk
-    if _global_jtalk is None:
-        _lazy_init()
-    if not exists(path):
-        raise ValueError("no such file or directory: %s" % path)
-    _global_jtalk = OpenJTalk(
-        dn_mecab=OPEN_JTALK_DICT_DIR, user_mecab=path.encode("utf-8")
-    )

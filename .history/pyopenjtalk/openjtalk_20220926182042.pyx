@@ -265,18 +265,3 @@ cdef class OpenJTalk(object):
         del self.mecab
         del self.njd
         del self.jpcommon
-
-    def CreateUserDict(bytes dn_mecab, bytes path, bytes out_path):
-        cdef (char*)[10] argv = [
-            "mecab-dict-index",
-            "-d",
-            dn_mecab,
-            "-u",
-            out_path,
-            "-f",
-            "utf-8",
-            "-t",
-            "utf-8",
-            path
-        ]
-        mecab_dict_index(10, argv)
